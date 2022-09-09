@@ -1,31 +1,21 @@
  import React, { useState, useEffect } from 'react' 
+ import {Deploy} from './Component/Deploy/Deploy';
 
  function App() {
 
-    const [data, setData] = useState([{}])
+    const [state, setState] = useState({})
 
     useEffect(() => {
-      fetch("/members").then(
-        res => res.json()
-      ).then(
-        data => {
-          setData(data)
-          console.log(data)
+      fetch("/api").then(response => {
+        if(response.status == 200){
+          return response.json()
         }
-      )
-    }, [])
-
+      }).then(data=> setState(data))
+      .then(error => console.log(error)) 
+    })
     return (
-      <div>
-      
-      {(typeof data.members === 'undefined') ? (
-        <p>Loading...</p>
-      ) : (
-        data.members.map((member,i) => (
-          <p key={i}>{member}</p>
-        ))
-      )}
-
+      <div className="App">
+        <Deploy prop={state}/>
       </div>
     )
  }
