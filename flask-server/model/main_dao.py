@@ -1,5 +1,7 @@
 import psycopg2
 from config.db_config import db_credentials
+from datetime import datetime
+
 
 
 class MainDAO:
@@ -11,3 +13,7 @@ class MainDAO:
                                                                               db_credentials['host'])
         print("connection url:  ", connection_url)
         self.conn = psycopg2.connect(connection_url)
+
+    a = 1557975599999
+    date = datetime.fromtimestamp(a // 1000)
+    print(date)

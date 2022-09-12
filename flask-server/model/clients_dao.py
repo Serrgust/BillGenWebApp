@@ -1,21 +1,47 @@
 from flask import Flask, request, jsonify, json
-from model.main_dao import MainDAO
+from .main_dao import MainDAO
+
 
 class ClientsDAO(MainDAO):
     def __init__(self):
         MainDAO.__init__(self)
 
-    def get_all_clients(self):
+    def get_all_active_clients(self):
         cursor = self.conn.cursor()
-        query = 'select name, last_name, address, client_id from "Clients" where is_deleted = false ORDER BY client_id;'
+        query = 'select name, last_name, phone_number, date_created, ' \
+                'clientid from "clients" where is_deleted = false'
         cursor.execute(query)
         result = []
         for row in cursor:
-            if len(row[2]) > 20:
-                last_name = row[0]
-                name = row[1]
-                address = row[2]
-                client_id = row[3]
-            else:
-                result.append(row)
+            result.append(row)
+        return result
+
+    def get_client_by_id(self, client_id):
+        cursor = self.conn.cursor()
+        query = 'select * from "clients" where clientid = %s;'
+        cursor.execute(query, (client_id,))
+        row = cursor.fetchone()
+        self.conn.commit()
+        return row
+
+    def verify_active_client_id(self, username):
+        cursor = self.conn.cursor()
+        query = 'select * from "clients" where clientid=%s and is_deleted=false;'
+        cursor.execute(query, (username,))
+        row = cursor.fetchone()
+        if not row:
+            return False
+        else:
+            return True
+
+    def get_address_by_client_id(self, client_id):
+        cursor = self.conn.cursor()
+        query = 'select urbanizacion, calle, numero_de_casa, municipio,' \
+                'zipcode, estado from "addresses" ' \
+                'where client = %s '
+        cursor.execute(query, (client_id,))
+        print("executed query: ", query)
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
