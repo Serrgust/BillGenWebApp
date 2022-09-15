@@ -114,7 +114,7 @@ def get_all_account_addresses():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route("/get_account_gateway/<int:gateway_id>", methods=['GET'])
+@app.route("/get_account_gateway/<gateway_id>", methods=['GET'])
 def get_account_gateway(gateway_id):
     if request.method == 'GET':
         return Meters().get_account_gateway(gateway_id)

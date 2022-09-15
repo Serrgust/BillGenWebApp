@@ -93,7 +93,9 @@ class Meters:
 
     def get_account_gateway(self, gateway_id):
         dao = MetersDAO()
+        print(gateway_id)
         info = dao.get_account_gateway(gateway_id)
+        print(info)
         result_list = []
         # for row in meters:
         #     obj = self.build_map_dict_meters(row)
