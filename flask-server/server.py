@@ -14,9 +14,11 @@ app = Flask(__name__)
 app.debug = True  # refresh and changes appear
 CORS(app)
 
+
 @app.route('/BillGenWebApp')
 def index():
     return 'BillGenWebApp, Hello!'
+
 
 # Members API Route
 @app.route("/members")
@@ -33,6 +35,7 @@ def get_all_active_clients():
         return jsonify("Method Not Allowed"), 405
 
 
+# Get client by using client id
 @app.route("/get_client_by_id/<int:client_id>", methods=['GET'])
 def get_client_by_id(client_id):
     if request.method == 'GET':
@@ -41,16 +44,44 @@ def get_client_by_id(client_id):
         return jsonify("Method Not Allowed"), 405
 
 
+# Get address by client id
 @app.route("/get_address_by_client_id/<int:client_id>", methods=['GET'])
-def get_address_by_client_id(client_id):
+def get_address_by_id(client_id):
     if request.method == 'GET':
-        return Clients().get_address_by_client_id(client_id)
+        return Clients().get_address_by_id(client_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
 
-# This function accesses the api_request URL and converts
-# the contents to a usable Python object and returns it
+# get account info of current api key
+@app.route("/get_account_info/", methods=['GET'])
+def get_account_info():
+    if request.method == 'GET':
+        return Meters().get_account_info()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+# Creates a new user
+@app.route('/create_client', methods=['POST'])
+def create_client():
+    if not request.json:
+        return jsonify("POST Body missing"), 400
+    elif request.method == 'POST':
+        return Clients().create_client(request.json)
+    else:
+        return jsonify("Method not allowed"), 405
+
+
+@app.route('/delete_client_by_id/<int:client_id>', methods=['DELETE'])
+def delete_client_by_id(client_id):
+    if request.method == 'DELETE':
+        return Clients().delete_client_by_id(client_id)
+    else:
+        return jsonify("Method not allowed"), 405
+
+
+# Get meter by using meter id
 @app.route("/get_meter_by_meter_id/<int:meter_id>", methods=['GET'])
 def get_meter_by_meter_id(meter_id):
     if request.method == 'GET':
@@ -59,12 +90,34 @@ def get_meter_by_meter_id(meter_id):
         return jsonify("Method Not Allowed"), 405
 
 
-# This function accesses the api_request URL and converts
-# the contents to a usable Python object and returns it
-@app.route("/get_account_info/", methods=['GET'])
-def get_account_info():
+@app.route("/get_meter_by_meter_id_by_filter/<int:meter_id>", methods=['GET'])
+def get_meter_by_meter_id_by_filter(meter_id):
     if request.method == 'GET':
-        return Meters().get_account_info()
+        return Meters().get_meter_by_meter_id_by_filter(meter_id, request.json)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route("/get_all_account_meters/", methods=['GET'])
+def get_all_account_meters():
+    if request.method == 'GET':
+        return Meters().get_all_account_meters()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route("/get_all_account_addresses/", methods=['GET'])
+def get_all_account_addresses():
+    if request.method == 'GET':
+        return Meters().get_all_account_addresses()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route("/get_account_gateway/<int:gateway_id>", methods=['GET'])
+def get_account_gateway(gateway_id):
+    if request.method == 'GET':
+        return Meters().get_account_gateway(gateway_id)
     else:
         return jsonify("Method Not Allowed"), 405
 

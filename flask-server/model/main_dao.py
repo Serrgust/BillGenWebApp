@@ -3,7 +3,6 @@ from config.db_config import db_credentials
 from datetime import datetime
 
 
-
 class MainDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host='%s'" % (db_credentials['dbname'],
