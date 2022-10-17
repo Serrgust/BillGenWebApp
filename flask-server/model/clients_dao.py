@@ -62,3 +62,5 @@ class ClientsDAO(MainDAO):
         row_count = cursor.rowcount
         self.conn.commit()
         return row_count != 0
+
+
